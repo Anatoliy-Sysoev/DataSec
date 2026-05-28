@@ -1,13 +1,13 @@
-# Deployment Guide
+# Руководство по развертыванию
 
-This guide describes two deployment modes:
+Документ описывает два режима развертывания:
 
-1. Docker Compose lab for local validation.
-2. Kubernetes blueprint for production-like environments.
+1. Docker Compose lab для локальной проверки.
+2. Kubernetes blueprint для production-like окружений.
 
 ## Docker lab
 
-The Docker lab is designed for fast architecture validation.
+Docker lab предназначен для быстрой проверки архитектуры и конфигураций.
 
 ```bash
 cd docker
@@ -15,7 +15,7 @@ cp .env.example .env
 docker compose up -d
 ```
 
-The lab starts:
+Lab-контур поднимает:
 
 - OpenLDAP;
 - Keycloak;
@@ -23,7 +23,7 @@ The lab starts:
 - OpenSearch;
 - Trino.
 
-Apache Ranger is intentionally not pinned to an unofficial Docker image. Production teams should build Ranger from approved artifacts or use an approved operator/chart/image.
+Apache Ranger намеренно не привязан к случайному неофициальному Docker-образу. Для production-команд корректный подход: собрать Ranger из официальных Apache release artifacts или использовать утвержденный operator/chart/image.
 
 ## Kubernetes blueprint
 
@@ -32,27 +32,27 @@ kubectl create namespace datasec
 kubectl apply -n datasec -f k8s/base/
 ```
 
-The Kubernetes blueprint contains:
+Kubernetes blueprint содержит:
 
-- namespace-independent config samples;
-- ConfigMaps for Trino and Ranger plugin configuration;
-- deployment placeholders;
-- ingress/TLS assumptions documented but not hardcoded.
+- независимые от namespace примеры конфигураций;
+- ConfigMap для Trino и конфигурации Ranger plugin;
+- placeholder-структуру для deployment;
+- предположения по ingress/TLS, зафиксированные в документации, но не зашитые в манифесты.
 
-## Production requirements
+## Production-требования
 
-| Area | Requirement |
+| Область | Требование |
 |---|---|
-| TLS | Mandatory for Keycloak/OIDC and external Trino access |
-| Secrets | Store in Vault, Kubernetes Secrets, or another approved secret manager |
-| Ranger DB | Use HA PostgreSQL/MySQL, not an embedded database |
-| Ranger Admin | Use at least two instances behind a load balancer |
-| Ranger UserSync | Run as a single active instance |
-| Audit backend | OpenSearch/Elasticsearch/Solr/S3/Log4J depending on approved stack |
-| Monitoring | Prometheus/Grafana for Trino, Ranger, UserSync, audit backend |
-| SIEM | Export Ranger audit events to central security monitoring |
+| TLS | Обязателен для Keycloak/OIDC и внешнего доступа к Trino |
+| Секреты | Хранить в Vault, Kubernetes Secrets или другом утвержденном secret manager |
+| Ranger DB | Использовать HA PostgreSQL/MySQL, не embedded database |
+| Ranger Admin | Минимум два инстанса за балансировщиком |
+| Ranger UserSync | Один активный экземпляр |
+| Audit backend | OpenSearch/Elasticsearch/Solr/S3/Log4J в зависимости от утвержденного стека |
+| Monitoring | Prometheus/Grafana для Trino, Ranger, UserSync и audit backend |
+| SIEM | Выгружать audit-события Ranger в централизованный контур ИБ |
 
-## Official sources
+## Официальные источники
 
 - Trino Ranger access control: https://trino.io/docs/current/security/ranger-access-control.html
 - Trino OAuth2: https://trino.io/docs/current/security/oauth2.html
