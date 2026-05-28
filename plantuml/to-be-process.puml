@@ -1,0 +1,47 @@
+@startuml
+!theme plain
+skinparam shadowing false
+
+title TO BE — Access Request and Runtime Authorization
+
+start
+:Employee exists in HR source;
+:IDM receives employee lifecycle data;
+:User requests access in IDM;
+:Select system = Trino Data Platform;
+:Select data domain / schema / role;
+
+:Manager approval;
+:Data owner approval;
+if (Sensitive data?) then (yes)
+  :Security approval;
+endif
+
+if (Approved?) then (yes)
+  :IDM adds user to LDAP access group;
+  :Ranger UserSync imports LDAP group membership;
+  :User authenticates through Keycloak SSO;
+  :User runs SQL query in Trino;
+  :Trino calls Ranger access control;
+  if (Ranger policy allows?) then (yes)
+    :Query is executed;
+    :Audit event = allowed;
+  else (no)
+    :Access denied;
+    :Audit event = denied;
+  endif
+  :Audit event is exported to SIEM pipeline;
+else (no)
+  :Access is not granted;
+endif
+
+partition "Revocation" {
+  :HR source sends transfer or dismissal event;
+  :IDM removes access;
+  :LDAP group membership is updated;
+  :Ranger UserSync updates subjects;
+  :Access is revoked in Trino/Ranger;
+}
+
+stop
+@enduml
