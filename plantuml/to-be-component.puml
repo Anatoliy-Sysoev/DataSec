@@ -1,0 +1,87 @@
+@startuml
+!theme plain
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam defaultTextAlignment center
+
+title TO BE — DataSec Reference Architecture
+
+actor "User" as User
+actor "Manager" as Manager
+actor "Data Owner" as DataOwner
+actor "Security / DataSec" as Sec
+actor "SOC" as SOC
+
+package "Identity Lifecycle" {
+  component "HR / Employee Source" as HR
+  component "IDM\nAccess workflow" as IDM
+}
+
+package "Corporate Identity" {
+  component "Keycloak\nSSO / OIDC" as KC
+  database "LDAP / FreeIPA / AD\nData-access groups" as LDAP
+}
+
+package "Data Access Platform" {
+  component "Trino Coordinator\nOIDC + Ranger AC" as Trino
+  component "Trino Workers" as Workers
+  component "Apache Ranger Admin HA" as Ranger
+  component "Ranger UserSync\nsingle active instance" as UserSync
+  database "Ranger DB\nPostgreSQL" as RangerDB
+  component "Ranger Trino Plugin\npolicy cache + audit" as Plugin
+  database "Data Sources" as DS
+}
+
+package "Audit and Monitoring" {
+  database "Audit Backend\nOpenSearch / ES / Solr" as Audit
+  component "Log Shipper\nVector / Fluent Bit / Logstash" as Shipper
+  queue "Kafka\noptional" as Kafka
+  component "SIEM" as SIEM
+  component "Prometheus / Grafana" as Mon
+}
+
+package "Governance" {
+  database "Service Registry\nTrino/Ranger inventory" as Registry
+  component "Access Reconciler\nIDM ↔ LDAP ↔ Ranger" as Reconciler
+}
+
+HR --> IDM : hire / transfer / dismissal events
+User --> IDM : request data access
+IDM --> Manager : manager approval
+IDM --> DataOwner : data owner approval
+IDM --> Sec : security approval for sensitive data
+IDM --> LDAP : manage group membership
+IDM --> KC : manage application access if required
+
+User --> KC : SSO authentication
+KC --> Trino : OIDC token
+LDAP --> UserSync : users / groups
+UserSync --> Ranger : sync subjects
+Ranger --> RangerDB : policies / services
+
+Trino --> Plugin : authorization check
+Plugin --> Ranger : policy updates
+Trino --> Workers : distributed execution
+Trino --> DS : query if authorized
+
+Plugin --> Audit : access audit events
+Audit --> Shipper
+Shipper --> Kafka
+Kafka --> SIEM
+Shipper --> SIEM
+SOC --> SIEM : investigations / detections
+
+Ranger --> Mon : metrics
+Trino --> Mon : metrics
+UserSync --> Mon : sync status
+Audit --> Mon : ingestion lag
+
+Registry <-- Ranger : service metadata
+Registry <-- Trino : cluster/catalog metadata
+Reconciler --> IDM : expected access
+Reconciler --> LDAP : actual groups
+Reconciler --> Ranger : actual policies via API
+Reconciler --> Sec : drift report
+
+@enduml
