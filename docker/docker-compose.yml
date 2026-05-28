@@ -1,0 +1,69 @@
+services:
+  openldap:
+    image: osixia/openldap:1.5.0
+    container_name: datasec-openldap
+    environment:
+      LDAP_ORGANISATION: ${LDAP_ORGANISATION:-Example Corp}
+      LDAP_DOMAIN: ${LDAP_DOMAIN:-example.org}
+      LDAP_ADMIN_PASSWORD: ${LDAP_ADMIN_PASSWORD:-admin}
+    ports:
+      - "389:389"
+      - "636:636"
+    volumes:
+      - ../ldap/bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/bootstrap.ldif:ro
+    command: ["--copy-service"]
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: datasec-keycloak
+    command: ["start-dev"]
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+    ports:
+      - "8080:8080"
+
+  postgres:
+    image: postgres:16
+    container_name: datasec-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-datasec}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-datasec}
+      POSTGRES_DB: ${POSTGRES_DB:-datasec}
+    ports:
+      - "5432:5432"
+
+  opensearch:
+    image: opensearchproject/opensearch:2
+    container_name: datasec-opensearch
+    environment:
+      discovery.type: single-node
+      plugins.security.disabled: "true"
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: admin1234567890!
+      bootstrap.memory_lock: "true"
+      OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+
+  trino:
+    image: trinodb/trino:${TRINO_VERSION:-latest}
+    container_name: datasec-trino
+    ports:
+      - "8081:8080"
+    volumes:
+      - ../trino/etc:/etc/trino:ro
+    depends_on:
+      - openldap
+      - keycloak
+      - opensearch
+
+# Apache Ranger is intentionally not pinned to an unofficial image here.
+# See docs/deployment.md for production options:
+# - build from Apache Ranger release artifacts;
+# - use an approved internal image;
+# - use a Kubernetes operator / Helm chart;
+# - use a managed platform distribution.
