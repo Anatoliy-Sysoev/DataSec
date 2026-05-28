@@ -1,0 +1,64 @@
+@startuml
+!theme plain
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam defaultTextAlignment center
+
+title AS IS — Fragmented Data Access Governance
+
+actor "User" as User
+actor "Approver" as Approver
+actor "LDAP Engineer" as LdapAdmin
+actor "Security / DataSec" as Sec
+
+package "Ticketing" {
+  component "Service Desk" as SD
+}
+
+package "Identity" {
+  component "Keycloak\nSSO" as KC
+  database "OpenLDAP / InfraLDAP\nAccess groups" as LDAP
+  component "IDM\nNot fully integrated" as IDM
+}
+
+package "Data Access Project" {
+  component "Trino" as Trino
+  component "Apache Ranger Admin" as Ranger
+  component "Ranger UserSync" as UserSync
+  component "Ranger Trino Plugin" as Plugin
+  database "Data Sources" as DS
+}
+
+package "Audit" {
+  database "Audit store\nSolr / ES / OpenSearch" as Audit
+  component "SIEM\noptional / partial" as SIEM
+}
+
+User --> SD : access request
+SD --> Approver : approval route
+Approver --> SD : approved
+SD --> LdapAdmin : manual execution
+LdapAdmin --> LDAP : add user to group
+
+User --> KC : SSO login
+KC --> Trino : OIDC token / session
+
+LDAP --> UserSync : users / groups sync
+UserSync --> Ranger : import subjects
+
+Trino --> Plugin : authorization check
+Plugin --> Ranger : policies
+Trino --> DS : query if allowed
+Plugin --> Audit : allow / deny audit
+Audit --> SIEM : partial export
+
+Sec ..> Ranger : manual review
+Sec ..> Audit : manual / partial audit
+
+note right of LDAP
+Group membership is executed manually.
+Revocation depends on manual process.
+end note
+
+@enduml
