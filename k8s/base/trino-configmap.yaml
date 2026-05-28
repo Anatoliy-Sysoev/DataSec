@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trino-config
+  namespace: datasec
+data:
+  config.properties: |
+    coordinator=true
+    node-scheduler.include-coordinator=true
+    http-server.http.port=8080
+    discovery-server.enabled=true
+    discovery.uri=http://localhost:8080
+  access-control.properties: |
+    access-control.name=ranger
+  ranger-trino-security.xml: |
+    <?xml version="1.0" encoding="UTF-8"?>
+    <configuration>
+      <property>
+        <name>ranger.plugin.trino.service.name</name>
+        <value>trino-dev-main</value>
+      </property>
+      <property>
+        <name>ranger.plugin.trino.policy.rest.url</name>
+        <value>http://ranger-admin:6080</value>
+      </property>
+      <property>
+        <name>ranger.plugin.trino.policy.pollIntervalMs</name>
+        <value>30000</value>
+      </property>
+    </configuration>
