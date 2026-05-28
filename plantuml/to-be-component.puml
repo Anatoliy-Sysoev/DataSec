@@ -5,83 +5,83 @@ skinparam shadowing false
 skinparam packageStyle rectangle
 skinparam defaultTextAlignment center
 
-title TO BE — DataSec Reference Architecture
+title TO BE — референсная DataSec-архитектура
 
-actor "User" as User
-actor "Manager" as Manager
-actor "Data Owner" as DataOwner
-actor "Security / DataSec" as Sec
+actor "Пользователь" as User
+actor "Руководитель" as Manager
+actor "Владелец данных" as DataOwner
+actor "ИБ / DataSec" as Sec
 actor "SOC" as SOC
 
-package "Identity Lifecycle" {
-  component "HR / Employee Source" as HR
-  component "IDM\nAccess workflow" as IDM
+package "Жизненный цикл идентичности" {
+  component "HR / источник сотрудников" as HR
+  component "IDM\nworkflow доступа" as IDM
 }
 
-package "Corporate Identity" {
+package "Корпоративная идентичность" {
   component "Keycloak\nSSO / OIDC" as KC
-  database "LDAP / FreeIPA / AD\nData-access groups" as LDAP
+  database "LDAP / FreeIPA / AD\nгруппы доступа к данным" as LDAP
 }
 
-package "Data Access Platform" {
+package "Платформа доступа к данным" {
   component "Trino Coordinator\nOIDC + Ranger AC" as Trino
   component "Trino Workers" as Workers
   component "Apache Ranger Admin HA" as Ranger
-  component "Ranger UserSync\nsingle active instance" as UserSync
+  component "Ranger UserSync\nодин активный экземпляр" as UserSync
   database "Ranger DB\nPostgreSQL" as RangerDB
   component "Ranger Trino Plugin\npolicy cache + audit" as Plugin
-  database "Data Sources" as DS
+  database "Источники данных" as DS
 }
 
-package "Audit and Monitoring" {
+package "Аудит и мониторинг" {
   database "Audit Backend\nOpenSearch / ES / Solr" as Audit
   component "Log Shipper\nVector / Fluent Bit / Logstash" as Shipper
-  queue "Kafka\noptional" as Kafka
+  queue "Kafka\nопционально" as Kafka
   component "SIEM" as SIEM
   component "Prometheus / Grafana" as Mon
 }
 
 package "Governance" {
-  database "Service Registry\nTrino/Ranger inventory" as Registry
+  database "Реестр сервисов\nTrino/Ranger inventory" as Registry
   component "Access Reconciler\nIDM ↔ LDAP ↔ Ranger" as Reconciler
 }
 
-HR --> IDM : hire / transfer / dismissal events
-User --> IDM : request data access
-IDM --> Manager : manager approval
-IDM --> DataOwner : data owner approval
-IDM --> Sec : security approval for sensitive data
-IDM --> LDAP : manage group membership
-IDM --> KC : manage application access if required
+HR --> IDM : прием / перевод / увольнение
+User --> IDM : запрос доступа к данным
+IDM --> Manager : согласование руководителем
+IDM --> DataOwner : согласование владельцем данных
+IDM --> Sec : согласование ИБ для чувствительных данных
+IDM --> LDAP : управление членством в группах
+IDM --> KC : управление доступом к приложению, если требуется
 
-User --> KC : SSO authentication
+User --> KC : SSO-аутентификация
 KC --> Trino : OIDC token
 LDAP --> UserSync : users / groups
-UserSync --> Ranger : sync subjects
-Ranger --> RangerDB : policies / services
+UserSync --> Ranger : синхронизация субъектов
+Ranger --> RangerDB : политики / сервисы
 
-Trino --> Plugin : authorization check
-Plugin --> Ranger : policy updates
+Trino --> Plugin : проверка авторизации
+Plugin --> Ranger : обновление политик
 Trino --> Workers : distributed execution
-Trino --> DS : query if authorized
+Trino --> DS : запрос, если авторизован
 
 Plugin --> Audit : access audit events
 Audit --> Shipper
 Shipper --> Kafka
 Kafka --> SIEM
 Shipper --> SIEM
-SOC --> SIEM : investigations / detections
+SOC --> SIEM : расследования / detections
 
-Ranger --> Mon : metrics
-Trino --> Mon : metrics
-UserSync --> Mon : sync status
+Ranger --> Mon : метрики
+Trino --> Mon : метрики
+UserSync --> Mon : статус sync
 Audit --> Mon : ingestion lag
 
 Registry <-- Ranger : service metadata
 Registry <-- Trino : cluster/catalog metadata
-Reconciler --> IDM : expected access
-Reconciler --> LDAP : actual groups
-Reconciler --> Ranger : actual policies via API
-Reconciler --> Sec : drift report
+Reconciler --> IDM : ожидаемые доступы
+Reconciler --> LDAP : фактические группы
+Reconciler --> Ranger : фактические политики через API
+Reconciler --> Sec : отчет о расхождениях
 
 @enduml
