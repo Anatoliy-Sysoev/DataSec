@@ -1,16 +1,16 @@
-# LDAP Groups
+# LDAP-группы доступа
 
-This directory describes a demo LDAP structure for data-access groups.
+Каталог описывает демонстрационную структуру LDAP для групп доступа к данным.
 
-Production rule: LDAP group membership must be managed by an IDM workflow, not by manual administrator actions.
+Production-правило: членство в LDAP-группах должно управляться IDM workflow, а не ручными действиями администратора.
 
-## Naming convention
+## Соглашение по именованию
 
 ```text
 dl_<domain>_<dataset>_<level>
 ```
 
-Examples:
+Примеры:
 
 ```text
 dl_sales_orders_ro
@@ -19,19 +19,19 @@ dl_finance_payments_ro
 dl_marketing_events_rw
 ```
 
-## Recommended OU structure
+## Рекомендуемая OU-структура
 
 ```text
 ou=data-access,ou=groups,dc=example,dc=org
 ```
 
-## Required metadata
+## Обязательные метаданные группы
 
-Each group should have:
+Для каждой группы нужно фиксировать:
 
-- business description;
-- data owner;
-- approver group;
-- sensitivity label;
-- expiration rules if access is temporary;
-- mapping to Ranger policy names.
+- бизнес-описание;
+- владельца данных;
+- согласующего или группу согласующих;
+- уровень чувствительности данных;
+- правила истечения доступа, если доступ временный;
+- связь с политиками Apache Ranger.
