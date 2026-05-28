@@ -1,19 +1,19 @@
-# TO BE Architecture
+# TO BE-архитектура
 
-The TO BE architecture connects identity lifecycle, access requests, LDAP groups, Ranger policies, Trino access control, and audit delivery.
+TO BE-архитектура связывает жизненный цикл пользователя, заявки на доступ, LDAP-группы, политики Ranger, контроль доступа в Trino и доставку аудита.
 
-## Target flow
+## Целевой поток
 
 ```text
-HR / employee source
-  -> IDM / access workflow
-  -> LDAP groups
+HR / источник сотрудников
+  -> IDM / workflow доступа
+  -> LDAP-группы
   -> Ranger UserSync
-  -> Ranger policies
+  -> политики Ranger
   -> Trino Ranger access control
-  -> data sources
+  -> источники данных
 
-User
+Пользователь
   -> Keycloak SSO
   -> Trino
 
@@ -22,41 +22,41 @@ Ranger audit
   -> SIEM
 ```
 
-## Target responsibilities
+## Ответственность компонентов
 
-| Component | Responsibility |
+| Компонент | Ответственность |
 |---|---|
-| HR / employee source | Hire, transfer, dismissal events |
-| IDM | Access catalog, approval workflow, access lifecycle |
-| Keycloak | SSO authentication through OIDC/OAuth2 |
-| LDAP / FreeIPA / AD | Groups used for data-access authorization |
-| Apache Ranger | Fine-grained data authorization and audit |
-| Trino | SQL access layer and policy enforcement point |
-| OpenSearch / Solr | Audit search and retention backend |
-| SIEM | Security monitoring and detection rules |
-| Access reconciler | Regular comparison of IDM, LDAP, Ranger and audit facts |
+| HR / источник сотрудников | События приема, перевода и увольнения |
+| IDM | Каталог доступов, маршруты согласования, жизненный цикл доступов |
+| Keycloak | SSO-аутентификация через OIDC/OAuth2 |
+| LDAP / FreeIPA / AD | Группы, используемые для авторизации к данным |
+| Apache Ranger | Fine-grained authorization и аудит |
+| Trino | SQL-слой доступа и policy enforcement point |
+| OpenSearch / Solr | Поиск и хранение audit-событий |
+| SIEM | Мониторинг безопасности и detection rules |
+| Access Reconciler | Регулярная сверка IDM, LDAP, Ranger и audit-фактов |
 
-## Core principles
+## Базовые принципы
 
-1. Authentication is handled by Keycloak.
-2. Authorization is handled by Ranger.
-3. Group membership is controlled by IDM and stored in LDAP.
-4. Ranger policies must use groups, not individual users.
-5. Manual user management in Ranger is prohibited.
-6. Service Desk is used only for exceptions and incidents.
-7. Every Ranger service must have an owner, URL, API endpoint, audit destination, and lifecycle status.
-8. Audit events must be exported to a security monitoring platform.
+1. Аутентификация выполняется через Keycloak.
+2. Авторизация выполняется через Apache Ranger.
+3. Членство в группах контролируется IDM и хранится в LDAP.
+4. Политики Ranger должны строиться на группах, а не на отдельных пользователях.
+5. Ручное управление пользователями в Ranger запрещено.
+6. Service Desk используется только для исключений и инцидентов.
+7. У каждого Ranger service должны быть владелец, URL, API endpoint, audit destination и lifecycle status.
+8. Audit-события должны выгружаться в контур мониторинга безопасности.
 
-## Recommended versions
+## Рекомендуемые версии
 
-| Component | Recommendation |
+| Компонент | Рекомендация |
 |---|---|
-| Trino | Use a version with native Ranger access control |
-| Apache Ranger | 2.5.0+ because Trino service definition is included |
-| Keycloak | Current supported release in your platform |
-| LDAP | OpenLDAP / FreeIPA / AD with stable group schema |
-| Audit backend | OpenSearch/Elasticsearch/Solr depending on approved stack |
+| Trino | Версия с native Ranger access control |
+| Apache Ranger | 2.5.0+, так как Trino service definition уже включен |
+| Keycloak | Актуальная поддерживаемая версия в платформе |
+| LDAP | OpenLDAP / FreeIPA / AD со стабильной групповой схемой |
+| Audit backend | OpenSearch / Elasticsearch / Solr в зависимости от утвержденного стека |
 
 ## PlantUML
 
-See: [`../plantuml/to-be-component.puml`](../plantuml/to-be-component.puml), [`../plantuml/to-be-process.puml`](../plantuml/to-be-process.puml), and [`../plantuml/use-cases.puml`](../plantuml/use-cases.puml).
+См. [`../plantuml/to-be-component.puml`](../plantuml/to-be-component.puml), [`../plantuml/to-be-process.puml`](../plantuml/to-be-process.puml), [`../plantuml/use-cases.puml`](../plantuml/use-cases.puml).
