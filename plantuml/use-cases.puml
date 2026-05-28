@@ -1,0 +1,46 @@
+@startuml
+!theme plain
+left to right direction
+skinparam shadowing false
+
+title DataSec — Use Case Diagram
+
+actor "Analyst" as Analyst
+actor "Data Owner" as Owner
+actor "Manager" as Manager
+actor "Security Engineer" as Sec
+actor "Platform Engineer" as Platform
+actor "SOC Analyst" as SOC
+
+rectangle "DataSec Platform" {
+  usecase "Authenticate via SSO" as UC1
+  usecase "Request access to data" as UC2
+  usecase "Approve access request" as UC3
+  usecase "Grant LDAP group membership" as UC4
+  usecase "Run SQL query in Trino" as UC5
+  usecase "Evaluate Ranger policy" as UC6
+  usecase "Mask sensitive columns" as UC7
+  usecase "Apply row-level filter" as UC8
+  usecase "Collect audit event" as UC9
+  usecase "Investigate suspicious access" as UC10
+  usecase "Reconcile actual vs approved access" as UC11
+  usecase "Operate Trino/Ranger stack" as UC12
+}
+
+Analyst --> UC1
+Analyst --> UC2
+Analyst --> UC5
+Manager --> UC3
+Owner --> UC3
+Sec --> UC3
+UC2 --> UC3
+UC3 --> UC4
+UC5 --> UC6
+UC6 --> UC7
+UC6 --> UC8
+UC6 --> UC9
+SOC --> UC10
+Sec --> UC11
+Platform --> UC12
+
+@enduml
