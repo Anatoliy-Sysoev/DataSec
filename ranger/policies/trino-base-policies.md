@@ -1,64 +1,64 @@
-# Baseline Trino Policies in Apache Ranger
+# Базовые политики Trino в Apache Ranger
 
-A Trino service in Ranger usually requires baseline policies before business data policies can work correctly.
+Для Trino service в Ranger обычно нужны базовые политики, без которых бизнес-политики доступа к данным могут работать некорректно.
 
-## 1. Query execution policy
+## 1. Политика выполнения запросов
 
-Resource:
+Ресурс:
 
 ```text
 queryid = *
 ```
 
-Access:
+Доступ:
 
 ```text
 execute
 ```
 
-Subjects:
+Субъекты:
 
 ```text
 {USER}
 ```
 
-## 2. Self impersonation policy
+## 2. Политика self impersonation
 
-Resource:
+Ресурс:
 
 ```text
 Trino User = {USER}
 ```
 
-Access:
+Доступ:
 
 ```text
 impersonate
 ```
 
-Subjects:
+Субъекты:
 
 ```text
 {USER}
 ```
 
-## 3. Information schema policy
+## 3. Политика information_schema
 
-Allow read access to `information_schema` where required for metadata discovery.
+Разрешить read-доступ к `information_schema`, если это требуется для просмотра метаданных.
 
-## 4. Function execution policy
+## 4. Политика выполнения функций
 
-Allow execution of safe functions for baseline user groups.
+Разрешить выполнение безопасных функций для базовых пользовательских групп.
 
-## 5. Business data policies
+## 5. Бизнес-политики доступа к данным
 
-Business policies should be created for LDAP groups:
+Бизнес-политики должны создаваться на LDAP-группы:
 
 ```text
 dl_sales_orders_ro -> catalog=sales, schema=public, table=orders, access=select
 dl_sales_pii_masked -> column masking on sensitive columns
 ```
 
-## Rule
+## Правило
 
-Do not create long-term policies for individual users. Use groups managed by the access workflow.
+Не создавать долгосрочные политики на отдельных пользователей. Использовать группы, управляемые через access workflow.
