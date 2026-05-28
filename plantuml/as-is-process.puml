@@ -2,34 +2,34 @@
 !theme plain
 skinparam shadowing false
 
-title AS IS — Manual LDAP Access Execution
+title AS IS — ручное исполнение доступа в LDAP
 
 start
-:User creates Service Desk ticket;
-:Ticket contains requested Trino/data access;
-:Approval route is executed;
-if (Approved?) then (yes)
-  :LDAP engineer manually adds user to LDAP group;
-  :Ranger UserSync periodically imports LDAP state;
-  :User logs in through SSO or local method;
-  :User runs query in Trino;
-  :Trino asks Ranger for authorization;
-  if (Allowed?) then (yes)
-    :Query runs;
-  else (no)
+:Пользователь создает заявку в Service Desk;
+:В заявке указан доступ к Trino / данным;
+:Выполняется маршрут согласования;
+if (Согласовано?) then (да)
+  :LDAP-инженер вручную добавляет пользователя в LDAP-группу;
+  :Ranger UserSync периодически импортирует состояние LDAP;
+  :Пользователь входит через SSO или локальный метод;
+  :Пользователь выполняет запрос в Trino;
+  :Trino запрашивает авторизацию в Ranger;
+  if (Разрешено?) then (да)
+    :Запрос выполняется;
+  else (нет)
     :Access denied;
   endif
-  :Audit event is stored if audit is configured;
-else (no)
-  :No access is granted;
+  :Audit event сохраняется, если аудит настроен;
+else (нет)
+  :Доступ не предоставляется;
 endif
 
 note right
-Main risks:
-- manual execution
-- slow revocation
-- weak traceability
-- no standard access catalog
+Основные риски:
+- ручное исполнение
+- медленный отзыв доступа
+- слабая трассируемость
+- нет стандартного каталога доступов
 end note
 
 stop
