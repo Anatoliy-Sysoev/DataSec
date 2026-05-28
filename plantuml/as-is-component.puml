@@ -5,60 +5,60 @@ skinparam shadowing false
 skinparam packageStyle rectangle
 skinparam defaultTextAlignment center
 
-title AS IS — Fragmented Data Access Governance
+title AS IS — разрозненное управление доступом к данным
 
-actor "User" as User
-actor "Approver" as Approver
-actor "LDAP Engineer" as LdapAdmin
-actor "Security / DataSec" as Sec
+actor "Пользователь" as User
+actor "Согласующий" as Approver
+actor "LDAP-инженер" as LdapAdmin
+actor "ИБ / DataSec" as Sec
 
-package "Ticketing" {
+package "Заявки" {
   component "Service Desk" as SD
 }
 
 package "Identity" {
   component "Keycloak\nSSO" as KC
-  database "OpenLDAP / InfraLDAP\nAccess groups" as LDAP
-  component "IDM\nNot fully integrated" as IDM
+  database "OpenLDAP / InfraLDAP\nгруппы доступа" as LDAP
+  component "IDM\nне полностью интегрирован" as IDM
 }
 
-package "Data Access Project" {
+package "Контур доступа к данным" {
   component "Trino" as Trino
   component "Apache Ranger Admin" as Ranger
   component "Ranger UserSync" as UserSync
   component "Ranger Trino Plugin" as Plugin
-  database "Data Sources" as DS
+  database "Источники данных" as DS
 }
 
-package "Audit" {
+package "Аудит" {
   database "Audit store\nSolr / ES / OpenSearch" as Audit
-  component "SIEM\noptional / partial" as SIEM
+  component "SIEM\nопционально / частично" as SIEM
 }
 
-User --> SD : access request
-SD --> Approver : approval route
-Approver --> SD : approved
-SD --> LdapAdmin : manual execution
-LdapAdmin --> LDAP : add user to group
+User --> SD : запрос доступа
+SD --> Approver : маршрут согласования
+Approver --> SD : согласовано
+SD --> LdapAdmin : ручное исполнение
+LdapAdmin --> LDAP : добавить пользователя в группу
 
-User --> KC : SSO login
+User --> KC : SSO-вход
 KC --> Trino : OIDC token / session
 
 LDAP --> UserSync : users / groups sync
-UserSync --> Ranger : import subjects
+UserSync --> Ranger : импорт субъектов
 
-Trino --> Plugin : authorization check
-Plugin --> Ranger : policies
-Trino --> DS : query if allowed
+Trino --> Plugin : проверка авторизации
+Plugin --> Ranger : политики
+Trino --> DS : запрос, если доступ разрешен
 Plugin --> Audit : allow / deny audit
-Audit --> SIEM : partial export
+Audit --> SIEM : частичная выгрузка
 
-Sec ..> Ranger : manual review
-Sec ..> Audit : manual / partial audit
+Sec ..> Ranger : ручная проверка
+Sec ..> Audit : ручной / частичный аудит
 
 note right of LDAP
-Group membership is executed manually.
-Revocation depends on manual process.
+Членство в группах исполняется вручную.
+Отзыв доступа зависит от ручного процесса.
 end note
 
 @enduml
