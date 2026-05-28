@@ -1,41 +1,41 @@
-# Problem Statement
+# Постановка проблемы
 
-## Context
+## Контекст
 
-Data platforms usually start with direct database access and local permissions. As the number of data sources, analysts, contractors, service accounts, and regulated datasets grows, this model becomes unsafe and hard to audit.
+Платформы данных часто начинаются с прямых доступов к базам данных и локальных прав. Когда растет количество источников данных, аналитиков, подрядчиков, сервисных учетных записей и регулируемых наборов данных, такая модель становится небезопасной и плохо аудируемой.
 
-## Problems solved by this reference architecture
+## Какие проблемы решает архитектура
 
-1. **Uncontrolled data access**
-   - Users receive direct database permissions.
-   - Permissions are spread across multiple systems.
-   - Access is difficult to review and revoke.
+1. **Неконтролируемый доступ к данным**
+   - Пользователи получают прямые права в БД.
+   - Права размазаны по нескольким системам.
+   - Доступ сложно проверять и отзывать.
 
-2. **Manual access execution**
-   - Access requests are handled through tickets.
-   - Engineers manually add users to groups.
-   - Mistakes and delays are inevitable.
+2. **Ручное исполнение доступов**
+   - Доступы запрашиваются через заявки.
+   - Инженеры вручную добавляют пользователей в группы.
+   - Ошибки и задержки неизбежны.
 
-3. **No consistent authorization model**
-   - Authentication confirms who the user is.
-   - It does not decide which schema, table, or column the user can access.
-   - Ranger provides this missing authorization layer.
+3. **Нет единой модели авторизации**
+   - Аутентификация подтверждает личность пользователя.
+   - Она не определяет, к какой схеме, таблице или колонке пользователь имеет доступ.
+   - Apache Ranger закрывает этот слой авторизации.
 
-4. **Weak audit visibility**
-   - Audit logs are local or incomplete.
-   - Security teams cannot easily answer: who accessed sensitive data, when, from where, and through which policy.
+4. **Слабая видимость аудита**
+   - Audit logs локальные или неполные.
+   - Команды ИБ не могут быстро ответить: кто, когда, откуда и по какой политике обращался к чувствительным данным.
 
-5. **Poor lifecycle control**
-   - Dismissed or transferred users may retain access.
-   - Access revocation must be driven by the identity lifecycle.
+5. **Плохой контроль жизненного цикла доступов**
+   - Уволенные или переведенные пользователи могут сохранить доступ.
+   - Отзыв доступа должен управляться событиями жизненного цикла сотрудника.
 
-## Target outcome
+## Целевой результат
 
-A project team should be able to deploy a repeatable DataSec stack where:
+Команда проекта должна иметь возможность развернуть повторяемый DataSec-стек, где:
 
-- users authenticate through SSO;
-- access is requested through an IDM workflow;
-- group membership is stored in LDAP;
-- Ranger applies fine-grained data policies in Trino;
-- audit is collected and exported for security monitoring;
-- access state can be reconciled automatically.
+- пользователь проходит SSO-аутентификацию;
+- доступ запрашивается через IDM workflow;
+- членство в группах хранится в LDAP;
+- Ranger применяет fine-grained политики доступа в Trino;
+- аудит собирается и выгружается в контур мониторинга безопасности;
+- фактическое состояние доступов регулярно сверяется автоматически.
