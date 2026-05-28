@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <property>
+    <name>xasecure.audit.is.enabled</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>xasecure.audit.destination.elasticsearch</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>xasecure.audit.destination.elasticsearch.urls</name>
+    <value>http://opensearch:9200</value>
+  </property>
+  <property>
+    <name>xasecure.audit.destination.elasticsearch.index</name>
+    <value>ranger-audit</value>
+  </property>
+  <property>
+    <name>xasecure.audit.log4j.is.enabled</name>
+    <value>true</value>
+  </property>
+</configuration>
