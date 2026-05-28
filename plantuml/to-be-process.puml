@@ -2,45 +2,45 @@
 !theme plain
 skinparam shadowing false
 
-title TO BE — Access Request and Runtime Authorization
+title TO BE — заявка на доступ и runtime-авторизация
 
 start
-:Employee exists in HR source;
-:IDM receives employee lifecycle data;
-:User requests access in IDM;
-:Select system = Trino Data Platform;
-:Select data domain / schema / role;
+:Сотрудник существует в HR-источнике;
+:IDM получает данные жизненного цикла сотрудника;
+:Пользователь запрашивает доступ в IDM;
+:Выбирает систему = Trino Data Platform;
+:Выбирает домен данных / схему / роль;
 
-:Manager approval;
-:Data owner approval;
-if (Sensitive data?) then (yes)
-  :Security approval;
+:Согласование руководителем;
+:Согласование владельцем данных;
+if (Чувствительные данные?) then (да)
+  :Согласование ИБ;
 endif
 
-if (Approved?) then (yes)
-  :IDM adds user to LDAP access group;
-  :Ranger UserSync imports LDAP group membership;
-  :User authenticates through Keycloak SSO;
-  :User runs SQL query in Trino;
-  :Trino calls Ranger access control;
-  if (Ranger policy allows?) then (yes)
-    :Query is executed;
+if (Заявка согласована?) then (да)
+  :IDM добавляет пользователя в LDAP-группу доступа;
+  :Ranger UserSync импортирует членство из LDAP;
+  :Пользователь проходит Keycloak SSO;
+  :Пользователь выполняет SQL-запрос в Trino;
+  :Trino вызывает Ranger access control;
+  if (Политика Ranger разрешает?) then (да)
+    :Запрос выполняется;
     :Audit event = allowed;
-  else (no)
+  else (нет)
     :Access denied;
     :Audit event = denied;
   endif
-  :Audit event is exported to SIEM pipeline;
-else (no)
-  :Access is not granted;
+  :Audit event выгружается в SIEM pipeline;
+else (нет)
+  :Доступ не предоставляется;
 endif
 
-partition "Revocation" {
-  :HR source sends transfer or dismissal event;
-  :IDM removes access;
-  :LDAP group membership is updated;
-  :Ranger UserSync updates subjects;
-  :Access is revoked in Trino/Ranger;
+partition "Отзыв доступа" {
+  :HR-источник отправляет событие перевода или увольнения;
+  :IDM отзывает доступ;
+  :Членство в LDAP-группе обновляется;
+  :Ranger UserSync обновляет субъекты;
+  :Доступ в Trino/Ranger прекращается;
 }
 
 stop
