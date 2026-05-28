@@ -3,28 +3,28 @@
 left to right direction
 skinparam shadowing false
 
-title DataSec — Use Case Diagram
+title DataSec — Use Case диаграмма
 
-actor "Analyst" as Analyst
-actor "Data Owner" as Owner
-actor "Manager" as Manager
-actor "Security Engineer" as Sec
+actor "Аналитик" as Analyst
+actor "Владелец данных" as Owner
+actor "Руководитель" as Manager
+actor "Специалист ИБ" as Sec
 actor "Platform Engineer" as Platform
 actor "SOC Analyst" as SOC
 
 rectangle "DataSec Platform" {
-  usecase "Authenticate via SSO" as UC1
-  usecase "Request access to data" as UC2
-  usecase "Approve access request" as UC3
-  usecase "Grant LDAP group membership" as UC4
-  usecase "Run SQL query in Trino" as UC5
-  usecase "Evaluate Ranger policy" as UC6
-  usecase "Mask sensitive columns" as UC7
-  usecase "Apply row-level filter" as UC8
-  usecase "Collect audit event" as UC9
-  usecase "Investigate suspicious access" as UC10
-  usecase "Reconcile actual vs approved access" as UC11
-  usecase "Operate Trino/Ranger stack" as UC12
+  usecase "Войти через SSO" as UC1
+  usecase "Запросить доступ к данным" as UC2
+  usecase "Согласовать доступ" as UC3
+  usecase "Выдать членство в LDAP-группе" as UC4
+  usecase "Выполнить SQL-запрос в Trino" as UC5
+  usecase "Проверить политику Ranger" as UC6
+  usecase "Замаскировать чувствительные колонки" as UC7
+  usecase "Применить row-level filter" as UC8
+  usecase "Собрать audit event" as UC9
+  usecase "Расследовать подозрительный доступ" as UC10
+  usecase "Сверить фактический и согласованный доступ" as UC11
+  usecase "Эксплуатировать Trino/Ranger stack" as UC12
 }
 
 Analyst --> UC1
