@@ -1,0 +1,17 @@
+flowchart TB
+    HR[HR / источник сотрудников] --> IDM[IDM / заявки и жизненный цикл доступов]
+    IDM --> LDAP[LDAP / FreeIPA / AD группы доступа]
+    LDAP --> US[Ranger UserSync]
+    US --> RANGER[Apache Ranger Admin]
+    RANGER --> PLUGIN[Ranger Trino Plugin]
+    USER[Пользователь] --> KC[Keycloak SSO]
+    KC --> TRINO[Trino]
+    TRINO --> PLUGIN
+    TRINO --> DS[(Источники данных)]
+    PLUGIN --> AUDIT[(Audit backend)]
+    AUDIT --> SHIPPER[Log shipper]
+    SHIPPER --> SIEM[SIEM / SOC]
+    RANGER --> REC[Access Reconciler]
+    LDAP --> REC
+    IDM --> REC
+    REC --> REPORT[Отчет о расхождениях]
