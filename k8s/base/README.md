@@ -1,18 +1,18 @@
 # Kubernetes Blueprint
 
-This directory contains a reference deployment blueprint.
+Каталог содержит референсный blueprint для Kubernetes-развертывания.
 
-It is not a complete production Helm chart. It shows the required configuration surfaces and the expected structure for a Kubernetes-based DataSec stack.
+Это не полноценный production Helm chart. Каталог показывает необходимые конфигурационные поверхности и ожидаемую структуру Kubernetes-based DataSec stack.
 
-## Recommended production deployment
+## Рекомендуемое production-развертывание
 
-- Trino: official Trino Helm chart or platform-approved chart.
-- Ranger: approved internal image, operator, or custom Helm chart based on Apache Ranger release artifacts.
-- Keycloak: official Keycloak chart/operator or platform-approved deployment.
+- Trino: официальный Trino Helm chart или утвержденный платформенный chart.
+- Ranger: утвержденный внутренний image, operator или custom Helm chart на базе Apache Ranger release artifacts.
+- Keycloak: официальный Keycloak chart/operator или утвержденное платформенное развертывание.
 - LDAP: managed OpenLDAP/FreeIPA/AD service.
-- Audit backend: OpenSearch/Elasticsearch/Solr with retention and SIEM export.
+- Audit backend: OpenSearch/Elasticsearch/Solr с retention и SIEM export.
 
-## Apply sample resources
+## Применение примерных ресурсов
 
 ```bash
 kubectl apply -f namespace.yaml
