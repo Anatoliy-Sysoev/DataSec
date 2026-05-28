@@ -1,19 +1,19 @@
-# Apache Ranger Configuration Examples
+# Примеры конфигурации Apache Ranger
 
-This directory contains examples for Trino service policies and Ranger plugin configuration.
+Каталог содержит примеры конфигурации Ranger для Trino service policies и Ranger Trino plugin.
 
-## Key files
+## Ключевые файлы
 
-| File | Purpose |
+| Файл | Назначение |
 |---|---|
-| `ranger-trino-security.xml.example` | Ranger Admin URL, service name and policy cache settings |
-| `ranger-trino-audit.xml.example` | Audit destination example |
-| `policies/trino-base-policies.md` | Required baseline policies for Trino |
+| `ranger-trino-security.xml.example` | URL Ranger Admin, service name и настройки policy cache |
+| `ranger-trino-audit.xml.example` | Пример настройки audit destination |
+| `policies/trino-base-policies.md` | Базовые политики, необходимые для работы Trino |
 
-## Design rules
+## Правила проектирования
 
-1. Create policies for groups, not individual users.
-2. Keep service names deterministic: `trino-<environment>-<cluster>`.
-3. Use a common naming convention for policies.
-4. Do not store secrets in XML files committed to Git.
-5. Use a secret manager for LDAP bind credentials, Ranger admin credentials, keystore passwords and TLS material.
+1. Создавать политики на группы, а не на отдельных пользователей.
+2. Использовать детерминированные service names: `trino-<environment>-<cluster>`.
+3. Соблюдать единый стандарт именования политик.
+4. Не хранить секреты в XML-файлах, закоммиченных в Git.
+5. Использовать secret manager для LDAP bind credentials, Ranger admin credentials, keystore passwords и TLS-материалов.
