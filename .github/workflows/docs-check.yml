@@ -2,9 +2,12 @@ name: docs-check
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - "**"
   pull_request:
-    branches: [ main ]
+    branches:
+      - "**"
+  workflow_dispatch:
 
 jobs:
   markdown-and-diagrams:
@@ -40,3 +43,12 @@ jobs:
           test -f docs/to-be.md
           test -f docs/architecture-decisions.md
           test -f docs/idm-integration.md
+          test -f keycloak/README.md
+          test -f ldap/bootstrap.ldif
+
+      - name: Upload rendered diagrams
+        uses: actions/upload-artifact@v4
+        with:
+          name: rendered-diagrams
+          path: images/
+          if-no-files-found: error
