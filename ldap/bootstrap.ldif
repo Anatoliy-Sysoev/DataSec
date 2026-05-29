@@ -1,0 +1,19 @@
+dn: ou=groups,dc=example,dc=org
+objectClass: organizationalUnit
+ou: groups
+
+dn: ou=data-access,ou=groups,dc=example,dc=org
+objectClass: organizationalUnit
+ou: data-access
+
+dn: cn=dl_sales_orders_ro,ou=data-access,ou=groups,dc=example,dc=org
+objectClass: groupOfNames
+cn: dl_sales_orders_ro
+description: Read-only access to sales orders dataset
+member: cn=admin,dc=example,dc=org
+
+dn: cn=dl_sales_pii_masked,ou=data-access,ou=groups,dc=example,dc=org
+objectClass: groupOfNames
+cn: dl_sales_pii_masked
+description: Masked access to sensitive sales columns
+member: cn=admin,dc=example,dc=org
