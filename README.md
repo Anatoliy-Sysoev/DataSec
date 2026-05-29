@@ -75,6 +75,7 @@ ranger/               Примеры конфигурации Ranger и базо
 trino/                Примеры конфигурации Trino
 ldap/                 Нейминг LDAP-групп, структура каталога и bootstrap.ldif
 keycloak/             Примечания по realm/client/OIDC
+examples/             Обезличенные входные данные для scripts/reconcile_access.py
 scripts/              Скрипты проверки, reconciliation и рендера диаграмм
 .github/workflows/    CI-проверки Markdown, PlantUML и рендера диаграмм
 ```

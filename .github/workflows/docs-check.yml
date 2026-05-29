@@ -12,20 +12,32 @@ on:
 jobs:
   markdown-and-diagrams:
     runs-on: ubuntu-latest
+    env:
+      # Официальный PlantUML jar. Apt-версия на ubuntu-latest устарела и
+      # не поддерживает используемые директивы (!theme plain и пр.).
+      PLANTUML_VERSION: "1.2024.7"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y graphviz plantuml
+          sudo apt-get install -y graphviz
           npm install -g @mermaid-js/mermaid-cli
+          curl -sSL -o "$RUNNER_TEMP/plantuml.jar" \
+            "https://github.com/plantuml/plantuml/releases/download/v${PLANTUML_VERSION}/plantuml-${PLANTUML_VERSION}.jar"
 
       - name: Render PlantUML diagrams
         run: |
           mkdir -p images/plantuml
-          plantuml -tpng -o ../images/plantuml plantuml/*.puml
+          java -jar "$RUNNER_TEMP/plantuml.jar" -tpng -o ../images/plantuml plantuml/*.puml
 
       - name: Render Mermaid diagrams
         run: |
