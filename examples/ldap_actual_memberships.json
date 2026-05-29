@@ -1,0 +1,16 @@
+{
+  "memberships": [
+    {
+      "user": "ivan.ivanov",
+      "group": "dl_sales_orders_ro"
+    },
+    {
+      "user": "petr.petrov",
+      "group": "dl_sales_pii_masked"
+    },
+    {
+      "user": "old.user",
+      "group": "dl_sales_orders_ro"
+    }
+  ]
+}

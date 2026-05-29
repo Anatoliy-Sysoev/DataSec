@@ -1,0 +1,16 @@
+{
+  "policies": [
+    {
+      "name": "trino_sales_orders_select",
+      "groups": [
+        "dl_sales_orders_ro"
+      ]
+    },
+    {
+      "name": "trino_sales_pii_masked_select",
+      "groups": [
+        "dl_sales_pii_masked"
+      ]
+    }
+  ]
+}
