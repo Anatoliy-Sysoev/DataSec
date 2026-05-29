@@ -67,18 +67,19 @@ Trino/Ranger Audit -> OpenSearch/Solr/Log pipeline -> SIEM
 
 ```text
 docs/                 Архитектура, AS IS / TO BE, ADR, IDM-интеграция
-plantuml/             Диаграммы компонентов, процессов, use case и deployment
-images/               Сгенерированные PNG/SVG-диаграммы
-mermaid/              Mermaid-диаграммы для GitHub preview
+plantuml/             Исходники PlantUML-диаграмм
+mermaid/              Исходники Mermaid-диаграмм для GitHub preview
 docker/               Docker Compose lab scaffold
 k8s/                  Kubernetes manifests и Helm-oriented blueprint
 ranger/               Примеры конфигурации Ranger и базовых политик
 trino/                Примеры конфигурации Trino
-ldap/                 Нейминг LDAP-групп и структура каталога
+ldap/                 Нейминг LDAP-групп, структура каталога и bootstrap.ldif
 keycloak/             Примечания по realm/client/OIDC
 scripts/              Скрипты проверки, reconciliation и рендера диаграмм
 .github/workflows/    CI-проверки Markdown, PlantUML и рендера диаграмм
 ```
+
+`images/` не хранится в Git как обязательный исходный каталог. PNG/SVG-диаграммы генерируются CI или локально через `scripts/render_diagrams.sh`.
 
 ---
 
@@ -125,7 +126,7 @@ kubectl apply -n datasec -f k8s/base/
 
 ## Диаграммы
 
-| Диаграмма | Файл |
+| Диаграмма | Исходник |
 |---|---|
 | AS IS компоненты | [`plantuml/as-is-component.puml`](plantuml/as-is-component.puml) |
 | AS IS процесс | [`plantuml/as-is-process.puml`](plantuml/as-is-process.puml) |
