@@ -42,9 +42,12 @@ jobs:
       - name: Render Mermaid diagrams
         run: |
           mkdir -p images/mermaid
+          # На ubuntu-latest (23.10+) Chromium из Puppeteer не имеет рабочего
+          # sandbox, поэтому запускаем mmdc с --no-sandbox через puppeteer config.
+          echo '{"args":["--no-sandbox","--disable-setuid-sandbox"]}' > "$RUNNER_TEMP/puppeteer-config.json"
           for file in mermaid/*.mmd; do
             name=$(basename "$file" .mmd)
-            mmdc -i "$file" -o "images/mermaid/${name}.png"
+            mmdc -p "$RUNNER_TEMP/puppeteer-config.json" -i "$file" -o "images/mermaid/${name}.png"
           done
 
       - name: Check Markdown files exist
