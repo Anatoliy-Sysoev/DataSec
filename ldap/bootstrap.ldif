@@ -17,3 +17,15 @@ objectClass: groupOfNames
 cn: dl_sales_pii_masked
 description: Masked access to sensitive sales columns
 member: cn=admin,dc=example,dc=org
+
+dn: cn=dl_finance_payments_ro,ou=data-access,ou=groups,dc=example,dc=org
+objectClass: groupOfNames
+cn: dl_finance_payments_ro
+description: Read-only access to finance payments dataset
+member: cn=admin,dc=example,dc=org
+
+dn: cn=dl_marketing_events_rw,ou=data-access,ou=groups,dc=example,dc=org
+objectClass: groupOfNames
+cn: dl_marketing_events_rw
+description: Read-write access to marketing events dataset
+member: cn=admin,dc=example,dc=org
