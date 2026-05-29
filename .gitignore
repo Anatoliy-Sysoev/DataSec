@@ -1,0 +1,9 @@
+# Generated artifacts
+reports/
+images/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/

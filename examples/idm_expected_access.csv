@@ -1,0 +1,4 @@
+user,group,system,role,valid_to
+ivan.ivanov,dl_sales_orders_ro,trino,Sales Orders Read,2026-12-31
+petr.petrov,dl_sales_pii_masked,trino,Sales PII Masked,2026-12-31
+anna.sidorova,dl_finance_payments_ro,trino,Finance Payments Read,2026-12-31
